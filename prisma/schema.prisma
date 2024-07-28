@@ -66,9 +66,25 @@ model Comment {
   post Post @relation(fields: [postId], references: [id])
   authorId Int
   author User @relation(fields: [authorId], references: [id])
+  likes CommentLikes[]
+  dislikes CommentDislikes[]
   replies CommentReply[]
   @@map("comments")
 
+}
+
+model CommentLikes{
+  id Int @id @default(autoincrement())
+  likedAt DateTime @default(now())
+  commentId Int
+  comment Comment @relation(fields: [commentId],references: [id])
+}
+
+model CommentDislikes{
+  id Int @id @default(autoincrement())
+  dislikedAt DateTime @default(now())
+  commentId Int
+  comment Comment @relation(fields: [commentId],references: [id])
 }
 model CommentReply{
   id Int @id @default(autoincrement())
