@@ -9,10 +9,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Post } from '@prisma/client';
 import { PrismaClientValidationError } from '@prisma/client/runtime/library';
-import { last } from '../../node_modules/rxjs/dist/esm5/internal/operators/last';
-import { retry } from 'rxjs';
-import { connect } from 'http2';
-import { in } from '../../node_modules/typescript/lib/typescript';
 
 @Injectable()
 export class PostsService {
@@ -329,31 +325,31 @@ export class PostsService {
     }
   }
 
-  async deleteComment(commentId:number){
-    try{
+  async deleteComment(commentId: number) {
+    try {
       const deletedComment = await this.prisma.comment.delete({
-        where:{
-          id:commentId
-        }
-      })
-      return deletedComment
-    }catch(err){
-      return {message:"Failed to delete comment"}
+        where: {
+          id: commentId,
+        },
+      });
+      return deletedComment;
+    } catch (err) {
+      return { message: 'Failed to delete comment' };
     }
   }
-  
-  async updateComment(body:{content:string},commentId:number){
-    try{
+
+  async updateComment(body: { content: string }, commentId: number) {
+    try {
       const updatedComment = await this.prisma.comment.update({
-        where:{
-          id:commentId
+        where: {
+          id: commentId,
         },
-        data:{
-          content:body.content
-        }
-      })
-    }catch(err){
-      return {message:"Failed to update comment"}
+        data: {
+          content: body.content,
+        },
+      });
+    } catch (err) {
+      return { message: 'Failed to update comment' };
     }
   }
 
@@ -416,35 +412,34 @@ export class PostsService {
     }
   }
   async getAllDislikesOnComment(commentId: number) {
-    try{
-    const dislikes = await this.prisma.commentDislikes.findMany({
-      where: {
-        commentId: commentId,
-      },
-      select:{
-        dislikedAt:true
-      }
-    });
-    return {
-      totalDislikes:dislikes.length,
-      dislikes:dislikes
+    try {
+      const dislikes = await this.prisma.commentDislikes.findMany({
+        where: {
+          commentId: commentId,
+        },
+        select: {
+          dislikedAt: true,
+        },
+      });
+      return {
+        totalDislikes: dislikes.length,
+        dislikes: dislikes,
+      };
+    } catch (err) {
+      return { message: 'Failed to get all dislikes on this comment' };
     }
-  } catch(err){
-    return {message:"Failed to get all dislikes on this comment"}
   }
-  }
-  
-  async deletedislikeOnComment(commentReplyId:number){
-    try{
+
+  async deletedislikeOnComment(commentReplyId: number) {
+    try {
       const dislikedComment = await this.prisma.commentDislikes.delete({
-        where:{
-          id:commentReplyId
-        }
-      })
-      return dislikedComment
-    }
-    catch(err){
-      return {message:"Failed to undislike comment"}
+        where: {
+          id: commentReplyId,
+        },
+      });
+      return dislikedComment;
+    } catch (err) {
+      return { message: 'Failed to undislike comment' };
     }
   }
 
